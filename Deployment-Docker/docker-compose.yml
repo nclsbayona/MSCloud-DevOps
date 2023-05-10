@@ -1,0 +1,30 @@
+services:
+  jenkins:
+    build:
+      context: Jenkins
+    container_name: jenkins-server
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - django-data:/deploy
+    ports:
+      - "8080:8080"
+  django:
+    build:
+      context: Django
+    container_name: django-server
+    volumes:
+      - django-data:/deploy
+    ports:
+      - "8000:8000"
+  gitea:
+    image: docker.io/gitea/gitea:1.19.0
+    container_name: Gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    volumes:
+      - ./gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
